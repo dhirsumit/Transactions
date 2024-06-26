@@ -8,8 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.android.AndroidInjection
 import nz.co.test.transactions.adapter.TransactionAdapter
 import nz.co.test.transactions.databinding.ActivityMainBinding
-import nz.co.test.transactions.di.viewmodel.ViewModelFactory
-import nz.co.test.transactions.utilities.ProgressDialog
 import nz.co.test.transactions.viewmodel.TransactionViewModel
 import javax.inject.Inject
 
@@ -26,13 +24,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val progressDialog =  ProgressDialog(this);
+
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
         viewModel = ViewModelProvider(this, viewModelFactory)[TransactionViewModel::class.java]
-        progressDialog.startLoadingDialog()
+
         viewModel.transactions.observe(this) { transactions ->
-            progressDialog.dismissDialog()
+            binding.pBar.visibility = View.GONE
             adapter = TransactionAdapter(transactions) { transaction ->
                 val intent = Intent(this, TransactionDetailActivity::class.java)
                intent.putExtra("transaction", transaction)
